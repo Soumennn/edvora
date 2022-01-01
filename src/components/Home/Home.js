@@ -1,66 +1,32 @@
 import FilterComp from "../FilterComp/FilterComp"
 import "./home.css"
-
+import { data, product_categories } from '../../data'; // importing from data.js
 import ProductItem from "../ProductItems/ProductItem";
-import { useState,useEffect} from "react";
-import axios from "axios";
+import { useState } from "react";
 
-export let data = [];
-
-const url = "https://assessment-edvora.herokuapp.com";
 
 function Home() {
-
-    let [fdata,setData] = useState(()=>[])
-    data = fdata; 
-    // let [product_categories, setCategories] = useState(()=>[])
-    let [product_cat,setCat] = useState(()=>[]);
-
-    useEffect(()=> {
-
-        // console.log("render");
-         (async function getfetchedData(url) {
-
-            const dataRequest = await axios.get(url)
-            // console.log(dataRequest);
-            setData(dataRequest.data);
-            return dataRequest 
-        })(url)
-        .then((response) => {
-            let products_c = []
-            // let fetchedArr = fdata.data
-            for(let item of response.data) {
-                if(products_c.includes(item.product_name) === false) {
-
-                    let x = item.product_name;
-                    products_c.push(x);
-                }
-            }
-            setCat(products_c);
-               
-                  
-        })
-    },[])
-
-    // console.log(fdata)
-    // console.log(product_cat)
-
     // This is a state variable made for toggling mobile menu
     let [mobileToggleMenu,setToggleMenu] = useState(()=> false );
 
     // Function for handling 'mobileToggleMenu' variable's toggling
     function mobileMenuHandler(e) {
+
         setToggleMenu((prev) => (
             prev = !prev
         ))
+
     }
-    
+
+
+
+
     return (
         
         <>  
             {/* Filter component on the left hand side  */}
             <div className="left-div hidden md:block col-span-2 lg:col-span-1 bg-[#292929] min-h-full " >
-                <FilterComp />
+                <FilterComp/>
             </div>
             {/* End of filter component */}
 
@@ -86,13 +52,13 @@ function Home() {
                 {/* products  */}
                 <div className="products-container bg-[#292929] mt-4 max-h-full p-4">
                     
-                    {product_cat.map((elem, idx)=> (
+                    {product_categories.map((elem, idx)=> (
                         <div key={idx} className="product-company bg-[#292929] my-4 py-4">
                             <h3 className="text-4xl text-[#FFFFFF] font-[400] py-6 px-2 mb-6 border-b-2 border-gray-500"> {elem} </h3>
                             <div className = "overflow-x-hidden w-full rounded-2xl px-8 bg-[#131313]">
                                 <div className="product-item-container w-auto bg-[#131313] my-2 flex ">
 
-                                {fdata.map((item,index)=> (
+                                {data.map((item,index)=> (
                                         item.product_name === elem ?
                                         (<div key={index} className="product-item min-w-[20rem] m-8 flex-shrink-0">
                                             <ProductItem info={item}/>
@@ -113,8 +79,6 @@ function Home() {
 
         </>
     )
-
-    
 }
 
 export default Home
